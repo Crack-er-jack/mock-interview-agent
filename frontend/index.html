@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Interview Agent — AI-Powered Technical Interviews</title>
+    <meta name="description" content="Simulate company-specific technical interviews with AI. Practice DSA, SQL, ML, and System Design rounds.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ════════ CONFIG VIEW ════════ -->
+    <section id="config-view" class="view active">
+        <div class="config-container">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <rect width="40" height="40" rx="12" fill="url(#logo-grad)"/>
+                        <path d="M12 20L18 14L24 20L18 26Z" fill="white" opacity="0.9"/>
+                        <path d="M18 14L24 20L30 14L24 8Z" fill="white" opacity="0.6"/>
+                        <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#3B82F6"/>
+                        </linearGradient></defs>
+                    </svg>
+                </div>
+                <h1>Mock Interview Agent</h1>
+                <p class="subtitle">AI-powered company-specific technical interview simulator</p>
+            </div>
+
+            <form id="config-form" class="glass-card">
+                <div class="form-group">
+                    <label for="company-input">Company Name</label>
+                    <input type="text" id="company-input" placeholder="e.g. Google, Amazon, Meta..." required autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role-select">Role</label>
+                        <select id="role-select" required>
+                            <option value="SDE">Software Engineer (SDE)</option>
+                            <option value="Data Analyst">Data Analyst</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level-select">Level</label>
+                        <select id="level-select" required>
+                            <option value="Intern">Intern</option>
+                            <option value="SDE1">SDE1 / Junior</option>
+                            <option value="SDE2">SDE2 / Mid-Level</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Round Type</label>
+                    <div class="chip-group" id="round-type-group">
+                        <button type="button" class="chip active" data-value="DSA">
+                            <span class="chip-icon">⚡</span> DSA
+                        </button>
+                        <button type="button" class="chip" data-value="SQL">
+                            <span class="chip-icon">🗃️</span> SQL
+                        </button>
+                        <button type="button" class="chip" data-value="ML">
+                            <span class="chip-icon">🧠</span> ML
+                        </button>
+                        <button type="button" class="chip" data-value="System Design">
+                            <span class="chip-icon">🏗️</span> System Design
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="start-btn">
+                    <span class="btn-text">Start Interview</span>
+                    <span class="btn-loader" style="display:none;">
+                        <span class="spinner"></span> Generating plan...
+                    </span>
+                </button>
+            </form>
+
+            <p class="footer-note">Powered by AI · No video/audio required · Text-based simulation</p>
+        </div>
+    </section>
+
+    <!-- ════════ INTERVIEW VIEW ════════ -->
+    <section id="interview-view" class="view">
+        <!-- Top bar -->
+        <header class="interview-header">
+            <div class="header-left">
+                <span class="company-badge" id="company-badge"></span>
+                <span class="phase-badge" id="phase-badge">Question</span>
+            </div>
+            <div class="header-right">
+                <span class="timer" id="timer">00:00</span>
+                <button class="btn-danger" id="end-interview-btn">End Interview</button>
+            </div>
+        </header>
+
+        <!-- Plan banner -->
+        <div class="plan-banner glass-card" id="plan-banner" style="display:none;">
+            <h3>📋 Interview Plan</h3>
+            <div class="plan-details" id="plan-details"></div>
+            <button class="btn-secondary" id="dismiss-plan-btn">Got it, let's go!</button>
+        </div>
+
+        <!-- Main split layout -->
+        <div class="interview-body">
+            <!-- Chat panel -->
+            <div class="chat-panel glass-card">
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-area">
+                    <textarea id="chat-input" placeholder="Type your response..." rows="3"></textarea>
+                    <button class="btn-primary btn-send" id="send-btn">
+                        <span class="btn-text">Send</span>
+                        <span class="btn-loader" style="display:none;"><span class="spinner"></span></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code panel -->
+            <div class="code-panel glass-card">
+                <div class="code-header">
+                    <span class="code-title">🐍 Python Editor</span>
+                    <button class="btn-secondary btn-run" id="run-code-btn">
+                        <span class="btn-text">▶ Run Code</span>
+                        <span class="btn-loader" style="display:none;"><span class="spinner"></span></span>
+                    </button>
+                </div>
+                <textarea id="code-editor" class="code-editor" placeholder="# Write your Python solution here..." spellcheck="false"></textarea>
+                <div class="output-panel">
+                    <div class="output-header">Output</div>
+                    <pre id="code-output" class="code-output">Run your code to see output here...</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ════════ SCORECARD VIEW ════════ -->
+    <section id="scorecard-view" class="view">
+        <div class="scorecard-container">
+            <div class="scorecard-header">
+                <h1>📊 Interview Scorecard</h1>
+                <p class="scorecard-subtitle" id="scorecard-subtitle"></p>
+            </div>
+
+            <div class="verdict-card glass-card" id="verdict-card">
+                <div class="verdict-label">Overall Verdict</div>
+                <div class="verdict-value" id="verdict-value"></div>
+                <div class="verdict-score" id="verdict-score"></div>
+            </div>
+
+            <div class="scores-grid" id="scores-grid"></div>
+
+            <div class="summary-card glass-card">
+                <h3>Summary</h3>
+                <p id="summary-text"></p>
+            </div>
+
+            <button class="btn-primary" id="new-interview-btn">Start New Interview</button>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
