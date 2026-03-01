@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "Two Sum",
+    "difficulty": "Easy",
+    "tags": ["arrays", "hashing"],
+    "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "ideal_solution": "Use a hash map to store previously seen numbers and their indices. Loop through the array, checking if (target - current_num) is in the map."
+  },
+  {
+    "id": 2,
+    "title": "Number of Islands",
+    "difficulty": "Medium",
+    "tags": ["graphs", "dfs", "bfs"],
+    "description": "Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.",
+    "ideal_solution": "Iterate through the grid. When a '1' is found, increment the island count and trigger a DFS/BFS to mark all connected '1's as visited (or flip them to '0')."
+  },
+  {
+    "id": 3,
+    "title": "Merge Intervals",
+    "difficulty": "Medium",
+    "tags": ["arrays", "sorting"],
+    "description": "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.",
+    "ideal_solution": "Sort the intervals based on the start time. Iterate through the intervals, maintaining a current merged interval. If the next interval overlaps, update the end time of the current interval. Otherwise, push the current interval to the result and start a new merged interval."
+  },
+  {
+    "id": 4,
+    "title": "LRU Cache",
+    "difficulty": "Medium",
+    "tags": ["design", "linked_list", "hashing"],
+    "description": "Design a data structure that follows the constraints of a Least Recently Used (LRU) cache. Implement the LRUCache class.",
+    "ideal_solution": "Use a doubly linked list to maintain the order of recently used items (most recent at the head, least recent at the tail) and a hash map to map keys to the corresponding linked list nodes for O(1) access."
+  },
+  {
+    "id": 5,
+    "title": "Minimum Window Substring",
+    "difficulty": "Hard",
+    "tags": ["strings", "sliding_window", "hashing"],
+    "description": "Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string \"\".",
+    "ideal_solution": "Use a sliding window approach with two pointers (left and right). Expand the window by moving 'right' until all characters of 't' are found. Then, contract the window by moving 'left' to find the minimum length while still containing all characters of 't'. Use a hash map to keep track of character frequencies."
+  }
+]

@@ -6,6 +6,7 @@ from openai import OpenAI
 import config
 from models import InterviewPlan
 from prompts.planner_prompt import build_planner_prompt
+from .react_agent import run_react_agent
 
 
 def _get_client() -> OpenAI:
@@ -34,7 +35,25 @@ async def generate_plan(
 
     client = _get_client()
 
+    # --- EDUCATIONAL COMMENT ---
+    # Instead of letting the LLM hallucinate a problem in one shot, we delegate this
+    # very specific task (finding a problem) to our mini autonomous ReAct agent.
+    # We give it a goal, let it loop, and wait for its Final Answer.
+    goal = f"Find a {level.lower()} difficulty problem suitable for a {role} at {company}. Use your tool to search the database."
+    print("\n" + "*"*60)
+    print("🚀 DELEGATING TO REACT AGENT TO RESEARCH A PROBLEM ")
+    print("*"*60 + "\n")
+    
+    try:
+        problem_hint = run_react_agent(goal)
+    except Exception as e:
+        print(f"ReAct Agent Failed. Using fallback. Error: {e}")
+        problem_hint = "Make up a coding problem."
+
     system_prompt = build_planner_prompt(company, role, level, round_type)
+    
+    # We now inject the ReAct agent's finding back into the Planner's prompt
+    system_prompt += f"\n\n[Agent Research Results]\nYou MUST format your plan to include this specific coding problem:\n{problem_hint}"
 
     response = client.chat.completions.create(
         model=config.LLM_MODEL,
